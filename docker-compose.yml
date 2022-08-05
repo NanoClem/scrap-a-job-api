@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: jobs_api
+    build:
+      context: .
+      args:
+        POETRY_V: "1.0.0"
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app:/project/app
+
