@@ -10,23 +10,22 @@ ENV PYTHONDONTWRITEBYTECODE 1 \
     PIP_DEFAULT_TIMEOUT=100
 
 # Install poetry
-RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=${POETRY_V} python -
 ENV PATH="${PATH}:/root/.local/bin"
+ENV PATH="${PATH}:/root/.local/share/pypoetry/venv/bin"
+RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=${POETRY_V} python -
 
 WORKDIR /project
 
-# Cache requirements
+# Cache build requirements
 COPY poetry.lock pyproject.toml /project/
 
 # Init poetry project
-RUN POETRY_VIRTUALENVS_CREATE=false poetry install --no-interaction --no-ansi
-
-# Uvicorn is located here under poetry
-ENV PATH="${PATH}:/root/.local/share/pypoetry/venv/bin"
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi
 
 COPY . /project
 
 EXPOSE 5000
 
-# CMD ["tail", "-f", "/dev/null"]
-ENTRYPOINT ["uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "5000"]
+CMD ["tail", "-f", "/dev/null"]
+# ENTRYPOINT ["uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "5000"]
