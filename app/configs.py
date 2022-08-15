@@ -1,4 +1,4 @@
-from models import WebsiteNames
+from app.schemas import WebsiteNames
 
 
 configs = {
