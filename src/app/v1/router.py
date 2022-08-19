@@ -44,12 +44,17 @@ async def create_job(job_add: JobAddBase, db: Session = Depends(get_db)):
         status='Created',
         message='Successfuly created new job add',
         result=_inserted,
-    )
+    ).dict(exclude_none=True)
 
 
 @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_job(id: int, db: Session = Depends(get_db)) -> None:
     crud.remove(db, id)
+    return ApiResponse(
+        code=status.HTTP_204_NO_CONTENT,
+        status='No content',
+        message='Successfuly removed job add',
+    ).dict(exclude_none=True)
 
 
 @router.get('/scrape/{website}', status_code=status.HTTP_200_OK)
@@ -57,10 +62,10 @@ async def scrape_jobs(
     website: WebsiteNames, q: str | None = None, db: Session = Depends(get_db)
 ) -> ApiResponse:
     """Scraping endpoint"""
-    result = crud.scrape_jobs(website)
+    _result = crud.scrape_jobs(website)
     return ApiResponse(
         code=status.HTTP_200_OK,
         status='Ok',
         message=f'Successfuly scraped {website} job adds',
-        result=result,
+        result=_result,
     ).dict(exclude_none=True)
