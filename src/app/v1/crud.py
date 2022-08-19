@@ -57,12 +57,11 @@ def remove(db: sql_orm.Session, id: int):
 
 def scrape(db: sql_orm.Session, website_name: schemas.WebsiteNames) -> list[dict]:
     """Scrap job adds data from given website."""
-    # Make scraping requests
     with rq.Session() as rq_session:
         job_parser = get_scraper(website_name)
         try:
             db_jobs = [
-                models.JobModel(**job_data)
+                models.JobModel(**job_data.dict())
                 for job_data in job_parser.scrape(rq_session)
             ]
         except rq.HTTPError:
