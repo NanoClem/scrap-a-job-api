@@ -24,15 +24,15 @@ class JobAddBase(BaseModel):
     title: Optional[str] = None
     slug: Optional[str] = None
     url: Optional[str] = None
+    company: Optional[str] = None 
     source_website: Optional[str] = None
     employment_type: Optional[str] = None
-    job_category: Optional[str] = None
-    job_extent: Optional[str] = None
+    employment_rate: Optional[int] = None
+    category: Optional[str] = None
+    extent: Optional[str] = None
     description: Optional[str] = None
     location: Optional[str] = None
     publication_date: Optional[str] = None
-    employment_rate: Optional[int] = None
-    company: Optional[str] = None 
 
 
 class JobAdd(JobAddBase):
