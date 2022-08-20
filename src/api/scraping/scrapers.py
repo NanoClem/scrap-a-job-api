@@ -4,8 +4,8 @@ from typing import ClassVar, Iterable
 from requests import Session, Response
 
 from api.schemas import WebsiteNames, JobAddBase
+from .configs import RequestConfig, get_request_config
 from .utils import parse_cookies
-from .configs import configs
 
 
 class Scraper(ABC):
@@ -17,9 +17,9 @@ class Scraper(ABC):
         """Name of the parser"""
 
     @property
-    @abstractmethod
-    def req_data(self) -> dict:
+    def req_data(self) -> RequestConfig:
         """Data used to make the request."""
+        return get_request_config(self.name)
 
     @abstractmethod
     def _make_request(self, session: Session) -> Response:
@@ -38,14 +38,13 @@ class AcademicworkScraper(Scraper):
     """Class for parsing jobs data from academicwork website."""
 
     name: ClassVar[str] = WebsiteNames.academicwork
-    req_data: ClassVar[dict] = configs[name]
 
     def _make_request(self, session: Session) -> Response:
         response = session.post(
-            self.req_data.get('base_url'),
-            headers=self.req_data.get('headers', {}),
-            json=self.req_data.get('body', {}),
-            cookies=parse_cookies(self.req_data.get('raw_cookie', '')),
+            self.req_data.base_url,
+            headers=self.req_data.headers,
+            json=self.req_data.body,
+            cookies=parse_cookies(self.req_data.raw_cookie),
         )
         response.raise_for_status()
         return response
@@ -75,12 +74,9 @@ class JobupScraper(Scraper):
     """Class for parsing jobs data from jobup website."""
 
     name: ClassVar[str] = WebsiteNames.jobup
-    req_data: ClassVar[dict] = configs[name]
 
     def _make_request(self, session: Session) -> Response:
-        response = session.get(
-            self.req_data.get('base_url'), headers=self.req_data.get('headers', {})
-        )
+        response = session.get(self.req_data.q_base_url, headers=self.req_data.headers)
         response.raise_for_status()
         return response
 
@@ -94,7 +90,7 @@ class JobupScraper(Scraper):
             source_website=self.name,
             employment_type=raw_data.get('employment_type_ids', list())[0],
             employment_rate=raw_data.get('employment_grades', list())[0],
-            #category='',
+            # category='',
             extent=str(raw_data.get('employment_grades', list())[0]),
             description=raw_data.get('preview'),
             location=raw_data.get('place'),

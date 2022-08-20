@@ -1,0 +1,31 @@
+---
+academicwork:
+  base_url: https://jobs.academicwork.ch/advertsearch
+  headers:
+    user-agent:  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+    content-type: application/json
+    requestverificationtoken:
+  body:
+    SearchQueryItems:
+      - type: Categories
+        value: IT
+        id: "20008319"
+      - type: Locations
+        value: Genève
+        id: "20010605"
+      - type: Locations
+        value: Lausanne
+        parent: Vaud
+        Id: "20010749"
+    StartIndex: 0     # pagination
+  raw_cookie:
+
+jobup:
+  base_url: https://www.jobup.ch/api/v1/public/search
+  headers:
+    user-agent:  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+    content-type: application/json
+  q:
+    rows: 20
+    query: IT
+    location: Lausanne%20OR%20Gen%C3%A8ve
