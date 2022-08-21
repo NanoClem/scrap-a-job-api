@@ -7,6 +7,8 @@ import yaml
 
 from api.schemas import WebsiteNames
 
+HTTP_REQ_CONFIGS: dict[WebsiteNames, Any] = {}
+
 
 @dataclass
 class RequestConfig:
@@ -21,19 +23,18 @@ class RequestConfig:
     @property
     def q_base_url(self) -> str | None:
         """Return the base url formated with its request parameters if there are any."""
-        q_url = None
-        if self.q:
-            q_str = '&'.join((k + '=' + v for k, v in self.q.items()))
-            q_url = f'{self.base_url}?{q_str}'
-        return q_url
+        if not self.q:
+            return None
+        q_str = '&'.join((k + '=' + str(v) for k, v in self.q.items()))
+        return f'{self.base_url}?{q_str}'
 
     def to_dict(self):
         """d"""
         return asdict(self)
 
 
-def load_configs() -> dict:
-    """Load http requests configs."""
+def load_configs() -> None:
+    """Load http requests configs file into global conf object."""
     conf_file = (Path(__file__).parent / 'scrape_config.yml').resolve()
 
     if not os.path.exists(conf_file):
@@ -45,10 +46,7 @@ def load_configs() -> dict:
     except IOError as err:
         raise IOError(err)
 
-    return yml_conf
-
-
-HTTP_REQ_CONFIGS: dict[WebsiteNames, Any] = load_configs()
+    HTTP_REQ_CONFIGS.update(yml_conf)
 
 
 def get_request_config(name: WebsiteNames) -> RequestConfig:
