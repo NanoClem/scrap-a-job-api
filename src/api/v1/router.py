@@ -56,12 +56,12 @@ async def delete_job(id: int, db: Session = Depends(get_db)):
 
 
 @router.get(
-    '/scrape_last/{website}',
+    '/{website}/last',
     status_code=status.HTTP_200_OK,
     response_model=list[JobAdd],
 )
 async def scrape_jobs(website: WebsiteNames, db: Session = Depends(get_db)):
-    """Scrape and save last job adds from a supported website.\n
+    """Scrape and save most recent job adds from a supported website.\n
     Scrape only from the first page.
     Returned result includes only scraped job adds which are not already in db.
     """
