@@ -1,9 +1,6 @@
-import requests as rq
 import sqlalchemy.orm as sql_orm
-from fastapi import HTTPException, status
 
 from api import schemas, models
-from api.scraping.scrapers import get_scraper
 
 
 def get_all(db: sql_orm.Session, skip: int = 0, limit: int = 100):
@@ -26,6 +23,7 @@ def create(db: sql_orm.Session, job_add: schemas.JobAddBase):
     new_job = models.JobModel(**job_add.dict())
     db.add(new_job)
     db.commit()
+    db.refresh(new_job)
     return new_job
 
 
@@ -34,22 +32,3 @@ def remove(db: sql_orm.Session, job_id: int):
     _job_add = get_by_id(db, job_id)
     db.delete(_job_add)
     db.commit()
-
-
-def scrape(db: sql_orm.Session, website_name: schemas.WebsiteNames) -> list[dict]:
-    """Scrap job adds data from given website."""
-    job_scraper = get_scraper(website_name)
-    with rq.Session() as rq_session:
-        try:
-            db_jobs = [
-                models.JobModel(**job_data.dict())
-                for job_data in job_scraper.scrape(rq_session)
-            ]
-        except rq.HTTPError as err:
-            raise err
-
-    # Save to database
-    db.bulk_save_objects(db_jobs)
-    db.commit()
-
-    return db_jobs
