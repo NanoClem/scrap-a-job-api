@@ -56,7 +56,7 @@ async def delete_job(id: int, db: Session = Depends(get_db)):
 
 
 @router.get(
-    '/scrape/{website}',
+    '/scrape_last/{website}',
     status_code=status.HTTP_200_OK,
     response_model=list[JobAdd],
 )
