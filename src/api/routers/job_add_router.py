@@ -10,7 +10,7 @@ from api.scraping.scrapers import get_scraper
 
 
 # Init router
-router = APIRouter(prefix='/api/v1/job_adds', tags=['job_adds'])
+router = APIRouter(prefix='/api/job_adds', tags=['job_adds'])
 
 
 @router.get('/', status_code=status.HTTP_200_OK, response_model=list[JobAdd])
@@ -57,7 +57,7 @@ async def delete_job(id: int, db: Session = Depends(get_db)):
 
 
 @router.get(
-    '/{website}/last',
+    '/scrape/{website}/last',
     status_code=status.HTTP_200_OK,
     response_model=list[JobAdd],
 )
@@ -66,9 +66,6 @@ async def scrape_jobs(website: WebsiteNames, db: Session = Depends(get_db)):
     Scrape only from the first page.
     Returned result includes only scraped job adds which are not already in db.
     """
-    _result = []
-
-    # Scrape job adds
     job_scraper = get_scraper(website)
     try:
         with rq.Session() as rq_session:
