@@ -1,12 +1,6 @@
-from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel
-
-
-class WebsiteNames(str, Enum):
-    academicwork = 'academicwork'
-    jobup = 'jobup'
 
 
 class JobAddBase(BaseModel):

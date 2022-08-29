@@ -5,7 +5,7 @@ from typing import Any
 
 import yaml
 
-from api.schemas import WebsiteNames
+from api.schemas.website_names import WebsiteNames
 
 HTTP_REQ_CONFIGS: dict[WebsiteNames, Any] = {}
 

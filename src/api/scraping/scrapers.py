@@ -3,7 +3,8 @@ from typing import ClassVar, Iterable
 
 from requests import Session, Response
 
-from api.schemas import WebsiteNames, JobAddBase
+from api.schemas.job_add_schemas import JobAddBase
+from api.schemas.website_names import WebsiteNames
 from .configs import RequestConfig, get_request_config
 from .utils import parse_cookies
 

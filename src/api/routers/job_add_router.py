@@ -2,9 +2,10 @@ import requests as rq
 from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 
-from . import crud
 from api.database import get_db
-from api.schemas import JobAdd, WebsiteNames, JobAddBase
+from api.cruds import job_add_crud as crud
+from api.schemas.job_add_schemas import JobAdd, JobAddBase
+from api.schemas.website_names import WebsiteNames
 from api.scraping.scrapers import get_scraper
 
 
