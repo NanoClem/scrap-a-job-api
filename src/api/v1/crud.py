@@ -1,3 +1,4 @@
+from typing import Iterable
 import sqlalchemy.orm as sql_orm
 
 from api import schemas, models
@@ -25,6 +26,18 @@ def create(db: sql_orm.Session, job_add: schemas.JobAddBase):
     db.commit()
     db.refresh(new_job)
     return new_job
+
+
+def create_many(db: sql_orm.Session, job_adds: Iterable[schemas.JobAddBase]):
+    """Bulk creation of jobs in database."""
+    _new_jobs = []
+    for job_add in job_adds:
+        db_jd = get_by_source_id(db, job_add.source_id)
+        if db_jd is None:
+            inserted_job = create(db, job_add)
+            _new_jobs.append(inserted_job)
+
+    return _new_jobs
 
 
 def remove(db: sql_orm.Session, job_id: int):

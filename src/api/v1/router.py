@@ -78,11 +78,4 @@ async def scrape_jobs(website: WebsiteNames, db: Session = Depends(get_db)):
             detail=f'An error occured while scraping data from website {website}.',
         )
 
-    # Insert in db
-    for job_add in _scraped_adds:
-        db_job_add = crud.get_by_source_id(db, job_add.source_id)
-        if db_job_add is None:
-            inserted_job = crud.create(db, job_add)
-            _result.append(inserted_job)
-
-    return _result
+    return crud.create_many(db, _scraped_adds)
