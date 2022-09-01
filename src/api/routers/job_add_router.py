@@ -1,5 +1,4 @@
 import httpx
-import asyncio
 from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 
@@ -7,8 +6,6 @@ from api.database import get_db
 from api.cruds import job_add_crud as crud
 from api.schemas.job_add import JobAdd, JobAddBase
 from api.schemas.website_names import WebsiteNames
-from api.scraping.scrapers import get_scraper
-
 
 # Init router
 router = APIRouter(prefix='/api/job_adds', tags=['job_adds'])
@@ -58,24 +55,22 @@ async def delete_job(id: int, db: Session = Depends(get_db)):
 
 
 @router.get(
-    '/scrape/{website}/last',
+    '/scrape/{website}',
     status_code=status.HTTP_200_OK,
     response_model=list[JobAdd],
 )
-async def scrape_jobs(website: WebsiteNames, db: Session = Depends(get_db)):
-    """Scrape and save most recent job adds from a supported website.\n
-    Scrape only from the first page.
-    Returned result includes only scraped job adds which are not already in db.
+async def scrape_jobs(
+    website: WebsiteNames, nb_pages: int = 1, db: Session = Depends(get_db)
+):
+    """Scrape and save job adds from a supported website.\n
+    Won't save job adds which are already in db, but will append them to the result anyway.
     """
-    _results = []
-    job_scraper = get_scraper(website)
     try:
-        async with httpx.AsyncClient() as client:
-            await job_scraper.scrape(client, _results)
+        _results = await crud.scrape(db, website, max_pages=nb_pages)
     except httpx.HTTPStatusError:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f'An error occured while scraping data from website {website}.',
         )
 
-    return crud.create_many(db, _results)
+    return _results

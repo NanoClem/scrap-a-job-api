@@ -1,6 +1,10 @@
 from typing import Iterable
+
+import httpx
 import sqlalchemy.orm as sql_orm
 
+from api.scraping.scrapers import get_scraper
+from api.schemas.website_names import WebsiteNames
 from api.schemas import job_add as schemas
 import api.models as models
 
@@ -29,14 +33,21 @@ def create(db: sql_orm.Session, job_add: schemas.JobAddBase):
     return new_job
 
 
-def create_many(db: sql_orm.Session, job_adds: Iterable[schemas.JobAddBase]):
+def create_many(
+    db: sql_orm.Session,
+    job_adds: Iterable[schemas.JobAddBase],
+    include_duplicates: bool = False,
+):
     """Bulk creation of jobs in database."""
     _new_jobs = []
     for job_add in job_adds:
         db_jd = get_by_source_id(db, job_add.source_id)
+        
         if db_jd is None:
             inserted_job = create(db, job_add)
             _new_jobs.append(inserted_job)
+        elif include_duplicates:
+            _new_jobs.append(db_jd)
 
     return _new_jobs
 
@@ -46,3 +57,14 @@ def remove(db: sql_orm.Session, job_id: int):
     _job_add = get_by_id(db, job_id)
     db.delete(_job_add)
     db.commit()
+
+
+async def scrape(db: sql_orm.Session, website_name: WebsiteNames, max_pages: int = 1):
+    """d"""
+    _results = []
+    job_scraper = get_scraper(website_name)
+
+    async with httpx.AsyncClient() as client:
+        await job_scraper.scrape(client, _results, max_page=max_pages)
+
+    return create_many(db, _results, include_duplicates=True)
