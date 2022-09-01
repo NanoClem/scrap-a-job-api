@@ -1,10 +1,11 @@
-import requests as rq
+import httpx
+import asyncio
 from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 
 from api.database import get_db
 from api.cruds import job_add_crud as crud
-from api.schemas.job_add_schemas import JobAdd, JobAddBase
+from api.schemas.job_add import JobAdd, JobAddBase
 from api.schemas.website_names import WebsiteNames
 from api.scraping.scrapers import get_scraper
 
@@ -66,14 +67,15 @@ async def scrape_jobs(website: WebsiteNames, db: Session = Depends(get_db)):
     Scrape only from the first page.
     Returned result includes only scraped job adds which are not already in db.
     """
+    _results = []
     job_scraper = get_scraper(website)
     try:
-        with rq.Session() as rq_session:
-            _scraped_adds = (scraped for scraped in job_scraper.scrape(rq_session))
-    except rq.HTTPError:
+        async with httpx.AsyncClient() as client:
+            await job_scraper.scrape(client, _results)
+    except httpx.HTTPStatusError:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f'An error occured while scraping data from website {website}.',
         )
 
-    return crud.create_many(db, _scraped_adds)
+    return crud.create_many(db, _results)
