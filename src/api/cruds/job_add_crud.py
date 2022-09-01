@@ -1,8 +1,8 @@
 from typing import Iterable
 import sqlalchemy.orm as sql_orm
 
-from api.schemas import job_add_schemas as schemas
-from api.models import job_add_model as models
+from api.schemas import job_add as schemas
+import api.models as models
 
 
 def get_all(db: sql_orm.Session, skip: int = 0, limit: int = 100):
