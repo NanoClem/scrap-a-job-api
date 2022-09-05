@@ -14,9 +14,8 @@ services:
       context: .
       args:
         POETRY_V: "1.0.0"
-    environment:
-      - SQLALCHEMY_DB_URL=sqlite:////project/db/job_adds.db
-      # - SQLALCHEMY_DB_URL=postgresql://user:password@postgresserver/db
+    env_file:
+      - secrets.env
     restart: always
     ports:
       - "5000:5000"
