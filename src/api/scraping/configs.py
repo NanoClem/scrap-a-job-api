@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 from dataclasses import dataclass, field, asdict
 from typing import Any
@@ -7,6 +8,23 @@ import yaml
 
 from api.schemas.website_names import WebsiteNames
 
+
+# Implementation of env variable parsing in yaml files.
+# Allows to write ${ENV_VARIABLE} to load it in yaml config
+path_matcher = re.compile(r'\$\{([^}^{]+)\}')
+
+def path_constructor(loader, node):
+  """Extract the matched value, expand env variable, and replace the match"""
+  value = node.value
+  match = path_matcher.match(value)
+  env_var = match.group()[2:-1]
+  return os.environ.get(env_var) + value[match.end():]
+
+yaml.add_implicit_resolver('!path', regexp=path_matcher, first=None, Loader=yaml.SafeLoader)
+yaml.add_constructor('!path', constructor=path_constructor, Loader=yaml.SafeLoader)
+
+
+# Global dict configs
 HTTP_REQ_CONFIGS: dict[WebsiteNames, Any] = {}
 
 

@@ -1,10 +1,12 @@
+# This config file states the default values passed the different scrapers.
+
 ---
 academicwork:
   base_url: https://jobs.academicwork.ch/advertsearch
   headers:
     user-agent:  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
     content-type: application/json
-    requestverificationtoken:
+    requestverificationtoken: ${ACADEMICWORK_VERIFICATION_TOKEN}
   body:
     SearchQueryItems:
       - type: Categories
@@ -18,12 +20,12 @@ academicwork:
         parent: Vaud
         Id: "20010749"
     StartIndex: 0     # pagination
-  raw_cookie:
+  raw_cookie: ${ACADEMICWORK_RAW_COOKIE}
 
 jobup:
   base_url: https://www.jobup.ch/api/v1/public/search
   headers:
-    user-agent:  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+    user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
     content-type: application/json
   q:
     rows: 20
