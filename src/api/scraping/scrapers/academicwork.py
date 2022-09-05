@@ -1,5 +1,5 @@
 import asyncio
-from typing import ClassVar, Iterable
+from typing import ClassVar
 
 import httpx
 
@@ -46,7 +46,7 @@ class AcademicworkScraper(BaseScraper):
 
     async def scrape(
         self, session: httpx.AsyncClient, res_data: list[JobAddBase], max_page: int = 1
-    ):
+    ) -> None:
         tasks = []
         curr_body = self.body
 
