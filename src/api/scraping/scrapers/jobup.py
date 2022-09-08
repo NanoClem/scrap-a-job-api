@@ -57,7 +57,7 @@ class JobupScraper(BaseScraper):
 
         # Build async tasks
         for page_n in range(1, min(max_page, ini_data['num_pages'])):
-            url = f'{self.req_data.q_base_url}&page={page_n}'
+            url = f'{self.req_data.q_base_url}&page={page_n+1}'
             tasks.append(self._make_request(session, alt_url=url))
 
         # Gather tasks result and parse
