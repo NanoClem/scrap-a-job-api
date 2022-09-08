@@ -52,10 +52,11 @@ class AcademicworkScraper(BaseScraper):
 
         # Initial request to get max number of available pages
         ini_response = await self._make_request(session, alt_body=curr_body)
-        ini_resp_data = ini_response.json()
+        ini_data = ini_response.json()
+        res_data.extend([self._parse(job_add) for job_add in ini_data['Adverts']])
 
         # Build async tasks
-        for page_n in range(min(max_page, ini_resp_data['TotalIndexes'])):
+        for page_n in range(1, min(max_page, ini_data['TotalIndexes'])):
             curr_body['StartIndex'] = page_n
             tasks.append(self._make_request(session, curr_body))
 
