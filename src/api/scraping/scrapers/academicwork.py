@@ -55,8 +55,8 @@ class AcademicworkScraper(BaseScraper):
         ini_resp_data = ini_response.json()
 
         # Build async tasks
-        for _ in range(min(max_page, ini_resp_data['TotalIndexes'])):
-            curr_body['StartIndex'] += 1
+        for page_n in range(min(max_page, ini_resp_data['TotalIndexes'])):
+            curr_body['StartIndex'] = page_n
             tasks.append(self._make_request(session, curr_body))
 
         # Gather tasks result and parse
