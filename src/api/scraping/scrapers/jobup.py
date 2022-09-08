@@ -53,10 +53,11 @@ class JobupScraper(BaseScraper):
         # Initial request to get max number of available pages
         ini_response = await self._make_request(session)
         ini_data = ini_response.json()
+        res_data.extend([self._parse(job_add) for job_add in ini_data['documents']])
 
         # Build async tasks
-        for page_n in range(min(max_page, ini_data['num_pages'])):
-            url = f'{self.req_data.q_base_url}&page={page_n+1}'
+        for page_n in range(1, min(max_page, ini_data['num_pages'])):
+            url = f'{self.req_data.q_base_url}&page={page_n}'
             tasks.append(self._make_request(session, alt_url=url))
 
         # Gather tasks result and parse
