@@ -28,6 +28,9 @@ class JobupScraper(BaseScraper):
         return response
 
     def _parse(self, raw_data: dict) -> JobAddBase:
+        emp_type = raw_data.get('employment_type_ids')
+        emp_rate = raw_data.get('employment_grades')
+        
         return JobAddBase(
             source_id=raw_data.get('job_id'),
             title=raw_data.get('title'),
@@ -35,10 +38,8 @@ class JobupScraper(BaseScraper):
             url=raw_data.get('_links').get('detail_en').get('href'),
             company=raw_data.get('company_name'),
             source_website=self.name,
-            # employment_type=raw_data.get('employment_type_ids', list())[0],
-            # employment_rate=raw_data.get('employment_grades', list())[0],
-            # category='',
-            # extent=str(raw_data.get('employment_grades', list())[0]),
+            employment_type=emp_type[0] if emp_rate else None,
+            employment_rate=emp_rate[0] if emp_rate else None,
             description=raw_data.get('preview'),
             location=raw_data.get('place'),
             publication_date=raw_data.get('publication_date'),
