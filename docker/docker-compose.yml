@@ -7,19 +7,20 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ./db/:/root/db/
+      - ../db/:/root/db/
   api:
     container_name: jobs_api
     build:
-      context: .
+      context: ../
+      dockerfile: ./docker/Dockerfile
       args:
         POETRY_V: "1.0.0"
     env_file:
-      - secrets.env
+      - ../secrets.env
     restart: always
     ports:
       - "5000:5000"
     volumes:
-      - ./src:/project/src
-      - ./db/:/project/db/
+      - ../src:/project/src
+      - ../db/:/project/db/
 
