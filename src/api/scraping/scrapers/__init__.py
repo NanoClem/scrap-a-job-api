@@ -1,4 +1,4 @@
-from api.schemas.website_names import WebsiteNames
+from ...schemas.website_names import WebsiteNames
 from .base_scraper import BaseScraper
 from .academicwork import AcademicworkScraper
 from .jobup import JobupScraper

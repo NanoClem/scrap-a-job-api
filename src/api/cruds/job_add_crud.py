@@ -3,10 +3,10 @@ from typing import Iterable
 import httpx
 import sqlalchemy.orm as sql_orm
 
-from api.scraping.scrapers import get_scraper
-from api.schemas.website_names import WebsiteNames
-from api.schemas import job_add as schemas
-import api.models as models
+from ..scraping.scrapers import get_scraper
+from ..schemas.website_names import WebsiteNames
+from ..schemas import job_add as schemas
+from .. import models
 
 
 def get_all(db: sql_orm.Session, skip: int = 0, limit: int = 100):

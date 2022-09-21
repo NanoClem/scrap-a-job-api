@@ -3,8 +3,8 @@ from typing import ClassVar
 
 import httpx
 
-from api.schemas.job_add import JobAddBase
-from api.schemas.website_names import WebsiteNames
+from ...schemas.job_add import JobAddBase
+from ...schemas.website_names import WebsiteNames
 from .base_scraper import BaseScraper
 from ..utils import parse_cookies
 

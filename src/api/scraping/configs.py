@@ -6,7 +6,7 @@ from typing import Any
 
 import yaml
 
-from api.schemas.website_names import WebsiteNames
+from ..schemas.website_names import WebsiteNames
 
 
 # Implementation of env variable parsing in yaml files.

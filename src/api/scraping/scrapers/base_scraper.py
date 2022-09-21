@@ -3,8 +3,8 @@ from typing import Iterable
 
 import httpx
 
-from api.schemas.job_add import JobAddBase
-from api.schemas.website_names import WebsiteNames
+from ...schemas.job_add import JobAddBase
+from ...schemas.website_names import WebsiteNames
 from ..configs import RequestConfig, get_request_config
 
 

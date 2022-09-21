@@ -1,11 +1,11 @@
 import asyncio
 from typing import ClassVar, Iterable
 
-from requests import Session, Response
+from requests import Session
 import httpx
 
-from api.schemas.job_add import JobAddBase
-from api.schemas.website_names import WebsiteNames
+from ...schemas.job_add import JobAddBase
+from ...schemas.website_names import WebsiteNames
 from .base_scraper import BaseScraper
 
 

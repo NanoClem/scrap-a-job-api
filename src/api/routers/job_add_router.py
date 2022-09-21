@@ -2,10 +2,10 @@ import httpx
 from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 
-from api.database import get_db
-from api.cruds import job_add_crud as crud
-from api.schemas.job_add import JobAdd, JobAddBase
-from api.schemas.website_names import WebsiteNames
+from ..database import get_db
+from ..cruds import job_add_crud as crud
+from ..schemas.job_add import JobAdd, JobAddBase
+from ..schemas.website_names import WebsiteNames
 
 # Init router
 router = APIRouter(prefix='/api/job_adds', tags=['job_adds'])
