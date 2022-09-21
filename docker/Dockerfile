@@ -27,5 +27,4 @@ COPY . /project
 
 EXPOSE 5000
 
-CMD ["tail", "-f", "/dev/null"]
-# ENTRYPOINT ["uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "5000"]
+ENTRYPOINT ["uvicorn", "src.api.main:app", "--reload", "--host", "0.0.0.0", "--port", "5000"]
