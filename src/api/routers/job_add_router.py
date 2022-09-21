@@ -2,7 +2,7 @@ import httpx
 from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 
-from ..database import get_db
+from ..database.database import get_db
 from ..cruds import job_add_crud as crud
 from ..schemas.job_add import JobAdd, JobAddBase
 from ..schemas.website_names import WebsiteNames

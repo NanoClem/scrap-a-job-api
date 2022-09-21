@@ -30,7 +30,7 @@ class JobupScraper(BaseScraper):
     def _parse(self, raw_data: dict) -> JobAddBase:
         emp_type = raw_data.get('employment_type_ids')
         emp_rate = raw_data.get('employment_grades')
-        
+
         return JobAddBase(
             source_id=raw_data.get('job_id'),
             title=raw_data.get('title'),
